@@ -21,7 +21,7 @@ public class TestApplication {
 
     @Bean
     CommandLineRunner start (UserRepository userRepository) {
-        LocalDate localDate = LocalDate.of(2005, 9, 20);
+        LocalDate localDate = LocalDate.of(1995, 9, 20);
         Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
         return args -> {
             userRepository.save(User.builder()
