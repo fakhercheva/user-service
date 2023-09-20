@@ -28,7 +28,7 @@ public class TestApplication {
         return args -> {
             userRepository.save(User.builder()
                     .name("fakher")
-                    .birthdate(date)
+                    .birthdate(localDate)
                     .county(String.valueOf(Nationality.FRENCH))
                     .phone("55768381")
                     .gender("Homme")

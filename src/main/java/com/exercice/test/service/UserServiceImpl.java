@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService{
 
         //verification of age > 18 for adult
         LocalDate now = LocalDate.now();
-        LocalDate birthdate = user.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate birthdate = user.getBirthdate();
         int age = Period.between(birthdate, now).getYears();
         if (age < 18) {
             throw new IllegalArgumentException("Only adult can create an account !!");

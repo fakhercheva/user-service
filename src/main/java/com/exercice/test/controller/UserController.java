@@ -28,7 +28,7 @@ public class UserController {
         public ResponseEntity<?> getDetails(@PathVariable Long id){
             try {
                 User user = userService.getUserDetails(id);
-                return ResponseEntity.status(HttpStatus.FOUND).body(user);
+                return ResponseEntity.status(HttpStatus.FOUND).body("user :" +user);
             } catch (UserNotFoundException e) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found");
             }

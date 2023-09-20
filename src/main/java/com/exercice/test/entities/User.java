@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Table(name = "app_user")
@@ -24,7 +25,7 @@ public class User {
     private String name;
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    private Date birthdate;
+    private LocalDate birthdate;
     @NotNull
     private String county;
     private String phone;
