@@ -20,13 +20,21 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User register(User user) {
+        if (user.getName() == null || user.getName().isEmpty()) {
+            throw new IllegalArgumentException("The 'name' field cannot be null or empty.");
+        }
+        if (user.getBirthdate() == null) {
+            throw new IllegalArgumentException("The 'Birthdate' field cannot be null or empty.");
+        }
+        if (user.getCounty() == null || user.getCounty().isEmpty()) {
+            throw new IllegalArgumentException("The 'County' field cannot be null or empty.");
+        }
 
         // Vérification of frensh nationality
         String county = user.getCounty().trim().toLowerCase();
         if (!Nationality.FRENCH.name().toLowerCase().equals(county)) {
             throw new IllegalArgumentException("French resident can only create an account !!");
         }
-
 
         //verification of age > 18 for adult
         LocalDate now = LocalDate.now();

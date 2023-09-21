@@ -1,6 +1,5 @@
 package com.exercice.test.controller;
 
-import com.exercice.test.controller.UserController;
 import com.exercice.test.entities.User;
 import com.exercice.test.exception.UserNotFoundException;
 import com.exercice.test.service.UserService;
@@ -12,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class UserControllerTest {
@@ -25,15 +25,6 @@ public class UserControllerTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         userController = new UserController(userService, null);
-    }
-
-    @Test
-    public void testGetDetails_UserNotFound() {
-        when(userService.getUserDetails(2L)).thenThrow(new UserNotFoundException("user not found !!"));
-        ResponseEntity<?> response = userController.getDetails(2L);
-        verify(userService, times(1)).getUserDetails(2L);
-        assert(response.getStatusCode() == HttpStatus.NOT_FOUND);
-        assert(response.getBody().equals("User Not Found"));
     }
 
     @Test
@@ -58,5 +49,24 @@ public class UserControllerTest {
         verify(userService, times(1)).register(mockUser);
         assert(response.getStatusCode() == HttpStatus.BAD_REQUEST);
         assert(response.getBody().equals("Invalid user data"));
+    }
+
+    @Test
+    public void testGetDetailsWithExistingUser() {
+        User mockUser = User.builder()
+                .id(1L)
+                .name("test")
+                .build();
+        when(userService.getUserDetails(1L)).thenReturn(mockUser);
+        ResponseEntity<?> response = userController.getDetails(1L);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(mockUser, response.getBody());
+    }
+
+    @Test
+    public void testGetDetailsWithNonExistingUser() {
+        when(userService.getUserDetails(2L)).thenThrow(new UserNotFoundException("User Not Found"));
+        ResponseEntity<?> response = userController.getDetails(2L);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 }

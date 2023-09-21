@@ -52,6 +52,7 @@ public class UserServiceImplTest {
     void testRegisterValidUser() {
         User validUser = new User();
         validUser.setCounty("FRENCH");
+        validUser.setName("test");
         validUser.setBirthdate(LocalDate.of(1990, 1, 1));
         when(userRepository.save(validUser)).thenReturn(validUser);
         User registeredUser = userService.register(validUser);
@@ -73,6 +74,53 @@ public class UserServiceImplTest {
         invalidUser.setBirthdate(LocalDate.now().minusYears(17));
         assertThrows(IllegalArgumentException.class, () -> userService.register(invalidUser));
     }
+    @Test
+    public void testRegisterWithNonName() {
+        User user = User.builder()
+                .county("french")
+                .birthdate(LocalDate.of(2000, 1, 1))
+                .build();
+        when(userRepository.save(user)).thenReturn(user);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            userService.register(user);
+        });
+        String expectedMessage = "The 'name' field cannot be null or empty.";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+    @Test
+    public void testRegisterWithNonBirthdate() {
+        User user = User.builder()
+                .county("french")
+                .name("test")
+                .build();
+        when(userRepository.save(user)).thenReturn(user);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            userService.register(user);
+        });
+        String expectedMessage = "The 'Birthdate' field cannot be null or empty.";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+    @Test
+    public void testRegisterWithNonCountry() {
+        User user = User.builder()
+                .name("test")
+                .birthdate(LocalDate.of(2000, 1, 1))
+                .build();
+        when(userRepository.save(user)).thenReturn(user);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            userService.register(user);
+        });
+        String expectedMessage = "The 'County' field cannot be null or empty.";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+
 
 
 
