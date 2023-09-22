@@ -23,7 +23,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final UserMapper userMapper; // Ajoutez le UserMapper
+    private final UserMapper userMapper;
     private final UserRepository userRepository;
     @Autowired
     public UserController(UserService userService,
@@ -37,7 +37,7 @@ public class UserController {
     @GetMapping("/details/{id}")
     public ResponseEntity<?> getDetails(@PathVariable Long id){
         try {
-            UserDTO userDTO = userMapper.userToUserDTO(userService.getUserDetails(id)); // Utilisez le UserMapper pour convertir User en UserDTO
+            UserDTO userDTO = userMapper.userToUserDTO(userService.getUserDetails(id));
             return ResponseEntity.ok(userDTO);
         } catch (UserNotFoundException e) {
             return ResponseEntity.notFound().build();
