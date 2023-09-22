@@ -1,5 +1,6 @@
 package com.exercice.test.controller;
 
+import com.exercice.test.dto.UserDTO;
 import com.exercice.test.entities.User;
 import com.exercice.test.exception.UserNotFoundException;
 import com.exercice.test.service.UserService;
@@ -24,44 +25,47 @@ public class UserControllerTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        userController = new UserController(userService, null);
+        userController = new UserController(userService, null,null);
     }
 
     @Test
     public void testRegisterUser_Success() {
-        User mockUser = new User();
-        mockUser.setId(1L);
-        mockUser.setName("test");
-        when(userService.register(mockUser)).thenReturn(mockUser);
-        ResponseEntity<String> response = userController.registerUser(mockUser);
-        verify(userService, times(1)).register(mockUser);
+        UserDTO mockUserDTO = new UserDTO();
+        mockUserDTO.setId(1L);
+        mockUserDTO.setName("test");
+        when(userService.register(mockUserDTO)).thenReturn(mockUserDTO);
+        ResponseEntity<?> response = userController.registerUser(mockUserDTO);
+        verify(userService, times(1)).register(mockUserDTO);
         assert(response.getStatusCode() == HttpStatus.CREATED);
-        assert(response.getBody().equals("User registered successfully with ID: 1"));
+        assert(response.getBody().equals("User registered successfully"));
     }
 
     @Test
     public void testRegisterUser_Failure() {
-        User mockUser = new User();
-        mockUser.setId(1L);
-        mockUser.setName("test");
-        when(userService.register(mockUser)).thenThrow(new IllegalArgumentException("Invalid user data"));
-        ResponseEntity<String> response = userController.registerUser(mockUser);
-        verify(userService, times(1)).register(mockUser);
+        UserDTO mockUserDTO = new UserDTO();
+        mockUserDTO.setId(1L);
+        mockUserDTO.setName("test");
+        when(userService.register(mockUserDTO)).thenThrow(new IllegalArgumentException("Invalid user data"));
+        ResponseEntity<?> response = userController.registerUser(mockUserDTO);
+        verify(userService, times(1)).register(mockUserDTO);
         assert(response.getStatusCode() == HttpStatus.BAD_REQUEST);
         assert(response.getBody().equals("Invalid user data"));
     }
 
     @Test
     public void testGetDetailsWithExistingUser() {
-        User mockUser = User.builder()
-                .id(1L)
-                .name("test")
-                .build();
+        UserDTO mockUserDTO = new UserDTO();
+        mockUserDTO.setId(1L);
+        mockUserDTO.setName("test");
+        User mockUser = new User();
+        mockUser.setId(mockUserDTO.getId());
+        mockUser.setName(mockUserDTO.getName());
         when(userService.getUserDetails(1L)).thenReturn(mockUser);
         ResponseEntity<?> response = userController.getDetails(1L);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(mockUser, response.getBody());
+        assertEquals(mockUserDTO, response.getBody());
     }
+
 
     @Test
     public void testGetDetailsWithNonExistingUser() {
