@@ -1,5 +1,6 @@
 package com.exercice.test.repository;
 
+import com.exercice.test.dto.UserDTO;
 import com.exercice.test.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
